@@ -37,8 +37,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  late Future<List<String>> futureWeatherData;
+class fetchWeatherData {
   static const String apiKey = "4d388933befa4a77910101931232611";
   static const String baseUrl = "https://api.weatherapi.com/v1/current.json";
   Future<List<String>> getWeatherData(location) async{
@@ -55,11 +54,16 @@ class _HomePageState extends State<HomePage> {
       throw Exception("Failed to load data from API");
     }
   }
+}
+
+class _HomePageState extends State<HomePage> {
+  late Future<List<String>> futureWeatherData;
+  fetchWeatherData weatherData = fetchWeatherData();
 
   @override
   void initState(){
     super.initState();
-    futureWeatherData = getWeatherData("London");
+    futureWeatherData = weatherData.getWeatherData("London");
   }
 
   @override
