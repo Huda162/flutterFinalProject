@@ -4,11 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_final_project/classes and widgets/cities_page.dart';
 import 'package:flutter_final_project/classes and widgets/home_page.dart';
 
-
-Set<String> cities = {
-  "Jerusalem", "London", "Paris"
-};
-
 void main() {
   runApp(const MyApp());
 }
