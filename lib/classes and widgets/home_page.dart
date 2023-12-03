@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_final_project/classes%20and%20widgets/app-drawer.dart';
+import 'package:flutter_final_project/classes%20and%20widgets/cities_page.dart';
+import 'package:flutter_final_project/classes%20and%20widgets/daily_weather_page.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_final_project/classes%20and%20widgets/fetch_api_data.dart';
+import 'CustomAppBar.dart';
+import 'app-drawer.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -14,6 +19,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
+
   late Future<List<String>> futureWeatherData;
   fetchWeatherData weatherData = fetchWeatherData();
 
@@ -26,36 +34,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          PopupMenuButton(
-              onSelected: (value){
-                if(value == "cities"){
-                  Navigator.pushNamed(context, '/CitiesWeather');
-                }
-                else if (value == "hourly"){
-                  Navigator.pushNamed(context, '/HourlyWeather');
-                }
-                else if(value=="daily"){
-                  Navigator.pushNamed(context, '/DailyWeather');
-                }
-              },
-              itemBuilder: (BuildContext context){
-                return <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    child: Text("Cities Weather"),
-                    value: 'cities',),
-                  PopupMenuItem<String>(
-                    child: Text("Daily Weather"),
-                    value: 'daily',),
-                  PopupMenuItem<String>(
-                    child: Text("Hourly Weather"),
-                    value: 'hourly',)
-                ];
-              })
-        ],
-      ),
+      appBar: CustomAppBar("Weather App"),
+      drawer: AppDrawer(),
       body: FutureBuilder(
         future: futureWeatherData,
         builder: (context, snapshot) {
