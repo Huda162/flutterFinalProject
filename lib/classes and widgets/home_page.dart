@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
 
 
-  late Future<List<String>> futureWeatherData;
+  late Future<Map<String, dynamic>> futureWeatherData;
   fetchWeatherData weatherData = fetchWeatherData();
 
   @override
@@ -44,14 +44,19 @@ class _HomePageState extends State<HomePage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            List<String> weatherData = snapshot.data as List<String>;
+            Map<String, dynamic>weatherData = snapshot.data!;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('${weatherData[0]}'),
-                  Icon(Icons.sunny),
-                  Text('${weatherData[1]}°C'),
+                  Text('${weatherData['location']}'),
+                  Image.network(
+                    weatherData['condition']['icon'],
+                    width: 100,
+                    height: 100,
+                  ),
+                  Text('${weatherData['temperature']}°C'),
+                  Text('${weatherData['condition']['text']}'),
                 ],
               ),
             );

@@ -70,13 +70,14 @@ class _DailyWeatherPageState extends State<DailyWeatherPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.cloud,
-                    size: 100, // Adjust the size to your preference
+                  Image.network(
+                    forecast['condition']['icon'],
+                    width: 110,
+                    height: 110,
                   ),
-                  Text('${forecast['date'].toString().substring(0, 10)}'),
                   Text('High: ${forecast['maxTemperature']}°C'),
                   Text('Low: ${forecast['minTemperature']}°C'),
+                  Text('${forecast['date'].toString().substring(0, 10)}'),
                 ],
           ),
           )

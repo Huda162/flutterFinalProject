@@ -14,7 +14,7 @@ class CityCard extends StatefulWidget {
 }
 
 class _CityCardState extends State<CityCard> {
-  late Future<List<String>> futureWeatherData;
+  late Future< Map<String, dynamic>> futureWeatherData;
   fetchWeatherData weatherData = fetchWeatherData();
   final String city;
 
@@ -38,19 +38,25 @@ class _CityCardState extends State<CityCard> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            List<String> weatherData = snapshot.data as List<String>;
+            Map<String, dynamic> weatherData = snapshot.data!;
             return Card(
               child: ListTile(
-                leading: Icon(Icons.sunny),
+                leading:  Image.network(
+                  weatherData['condition']['icon'],
+                  width: 50.0,
+                  height: 50.0,
+                ),
                 title: Text(
-                  '${weatherData[0]}',
+                  '${weatherData['location']}',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.0,
                   ),
                 ),
                 subtitle: Text(
-                  '${weatherData[1]}°C',
+                  '${weatherData['condition']['text']}  '
+
+                  '${weatherData['temperature']}°C',
                   style: TextStyle(
                     fontSize: 16.0,
                     color: Colors.grey,
