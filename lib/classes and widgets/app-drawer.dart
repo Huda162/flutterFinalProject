@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/cities_page.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/daily_weather_page.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/home_page.dart';
+import 'package:flutter_final_project/classes%20and%20widgets/hourly-weather-page.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -74,6 +75,10 @@ class _AppDrawerState extends State<AppDrawer> {
             onTap: () {
               _onItemTapped(3);
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HourlyWeatherPage()),
+              );
             },
           ),
         ],

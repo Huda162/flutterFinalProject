@@ -28,7 +28,7 @@ class fetchWeatherData {
   }
 
   Future<List<Map<String, dynamic>>> getDailyWeatherData(location) async {
-    final apiUrl = "$baseUrl/forecast.json?key=$apiKey&q=$location&aqi=no&days=6";
+    final apiUrl = "$baseUrl/forecast.json?key=$apiKey&q=$location&aqi=no&days=7";
     http.Response response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
@@ -48,6 +48,35 @@ class fetchWeatherData {
             'code': forecast['day']['condition']['code'],
           },
           'uvIndex': forecast['day']['uv'],
+        });
+      }
+
+      return forecasts;
+    } else {
+      throw Exception("Failed to load data from API");
+    }
+  }
+  Future<List<Map<String, dynamic>>> getHourlyWeatherData(location) async {
+    String currentTime = DateTime.now().toString().substring(11,13);
+    print(currentTime);
+    final apiUrl = "$baseUrl/forecast.json?key=$apiKey&q=$location&aqi=no&hours=24";
+    http.Response response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final List<dynamic> hourlyForecasts = data['forecast']['forecastday'][0]['hour'];
+      List<Map<String, dynamic>> forecasts = [];
+
+      for (var forecast in hourlyForecasts) {
+        forecasts.add({
+          'time': forecast['time'],
+          'temperature': forecast['temp_c'],
+          'condition': {
+            'text': forecast['condition']['text'],
+            'icon': forecast['condition']['icon'],
+            'code': forecast['condition']['code'],
+          },
+          'windSpeed': forecast['wind_kph'],
         });
       }
 
