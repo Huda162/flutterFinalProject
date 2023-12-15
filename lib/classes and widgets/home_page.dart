@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/app-drawer.dart';
+import 'package:flutter_final_project/classes%20and%20widgets/city-prrovider.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/fetch_api_data.dart';
 import 'CustomAppBar.dart';
+import 'package:provider/provider.dart';
+import 'city-prrovider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
 
   final String title = 'Weather App';
 
+
   @override
   Widget build(BuildContext context) {
+    String selectedCity = Provider.of<CityProvider>(context).selectedCity;
     return Scaffold(
       appBar: CustomAppBar("Weather App"),
       drawer: AppDrawer(),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fetchWeatherData().getWeatherData("Jerusalem"),
+        future: fetchWeatherData().getWeatherData(selectedCity),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
