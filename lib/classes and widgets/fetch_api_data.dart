@@ -12,7 +12,10 @@ class fetchWeatherData {
     if (response.statusCode == 200){
       final data = jsonDecode(response.body);
       Map<String, dynamic> result = {
-        'location': data['location']['name'],
+        'location': {
+          'name': data['location']['name'],
+          'country':data['location']['country'],
+          'localtime':data['location']['localtime']},
         'temperature': data['current']['temp_c'].toString(),
         'condition': {
           'text': data['current']['condition']['text'],

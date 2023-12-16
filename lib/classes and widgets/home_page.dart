@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('${weatherData['location']}'),
+                  Text('${weatherData['location']['name']}'),
                   Image.network(
                     weatherData['condition']['icon'],
                     width: 100,
