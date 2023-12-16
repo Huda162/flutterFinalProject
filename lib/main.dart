@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_final_project/classes and widgets/home_page.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/city-prrovider.dart';
 import 'package:provider/provider.dart';
+import 'classes and widgets/city-database.dart';
 
 
-void main() {
+void main() async{
+
   runApp(const MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
+
   const MyApp({super.key});
 
   @override

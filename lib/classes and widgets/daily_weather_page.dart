@@ -56,10 +56,12 @@ class DailyWeatherPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                  forecast['condition']['icon'],
-                  width: 110,
-                  height: 110,
+                Expanded(
+                  child: Image.network(
+                    forecast['condition']['icon'],
+                    width: 110,
+                    height: 110,
+                  ),
                 ),
                 Text('${forecast['date'].toString().substring(0, 10)}'),
                 Text('High: ${forecast['maxTemperature']}°C'),

@@ -1,4 +1,3 @@
-import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/city_card.dart';
@@ -8,12 +7,29 @@ import 'CustomAppBar.dart';
 import 'app-drawer.dart';
 import 'package:provider/provider.dart';
 import 'city-prrovider.dart';
+import 'city-database.dart';
+import 'city.dart';
 
-class CitiesWeatherPage extends StatelessWidget {
+class CitiesWeatherPage extends StatefulWidget {
   CitiesWeatherPage({Key? key});
 
-  List<String> cities = ["Jerusalem", "London", "Paris", "Amman"];
 
+  @override
+  State<CitiesWeatherPage> createState() => _CitiesWeatherPageState();
+}
+
+class _CitiesWeatherPageState extends State<CitiesWeatherPage> {
+  List<String> cities = ["Jerusalem", "London", "Paris", "Amman", "Granada", "Nablus", "New York", "Algiers"];
+
+  Future<void> changeFavoriteState( Map<String, dynamic> weatherData) async {
+    bool cityExists = await DatabaseProvider.instance.doesCityExist(weatherData["location"]['name']);
+    if (cityExists == false) {
+      City city = City(id: -1, name: weatherData["location"]['name'],country: weatherData['location']['country']);
+      DatabaseProvider.instance.add(city);
+    } else {
+      DatabaseProvider.instance.delete(weatherData["location"]['name']);
+    }
+  }
   void showCityDialog(
       BuildContext context, String city, Map<String, dynamic> weatherData) {
     showDialog(
@@ -67,20 +83,32 @@ class CitiesWeatherPage extends StatelessWidget {
                       fontSize: 18.0,
                     ),
                   ),
-                  subtitle: Text(
-                    '${weatherData['condition']['text']}  '
-                    '${weatherData['temperature']}°C',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.grey,
+                  subtitle: Row(
+                    children: [Text(
+                      '${weatherData['condition']['text']}  '
+                          '${weatherData['temperature']}°C',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.grey,
+                      ),
                     ),
+                      IconButton(
+                          onPressed: (){
+                              changeFavoriteState(weatherData);
+                          },
+                        icon: Icon(
+                            DatabaseProvider.instance.doesCityExist(weatherData["location"]['name'])==true
+                              ? Icons.star
+                              : Icons.star_border,
+                        ),),],
                   ),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      showCityDialog(context, cities[index], weatherData);
-                    },
-                    child: Text("Show Details"),
-                  ),
+                  trailing:
+                      ElevatedButton(
+                        onPressed: () {
+                          showCityDialog(context, cities[index], weatherData);
+                        },
+                        child: Text("Show Details"),
+                      ),
                 );
               }
             },
