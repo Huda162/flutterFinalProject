@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/CustomAppBar.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/app-drawer.dart';
@@ -14,7 +15,7 @@ class HourlyWeatherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     String selectedCity = Provider.of<CityProvider>(context).selectedCity;
     return Scaffold(
-      appBar: CustomAppBar("Hourly Weather ${selectedCity}"),
+      appBar: CustomAppBar(context, "Hourly Weather ${selectedCity}"),
       drawer: AppDrawer(),
       body: FutureBuilder<List<Map<String, dynamic>>>(
     future: fetchWeatherData().getHourlyWeatherData(selectedCity),
@@ -57,10 +58,13 @@ class HourlyWeatherPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                  forecast['condition']['icon'],
-                  width: 110,
-                  height: 110,
+                CachedNetworkImage(
+                  imageUrl: Uri.encodeFull('https:' + forecast['condition']['icon']),
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) {
+                    print("Error loading image: $error");
+                    return Icon(Icons.error);
+                  },
                 ),
                 Text('${forecast['time'].toString().substring(11)}'),
                 Text('Tempreture: ${forecast['temperature']}°C'),

@@ -11,7 +11,7 @@ class DatabaseProvider extends ChangeNotifier{
 
   static final DatabaseProvider instance = DatabaseProvider._privateConstructor();
   static Database? _database;
-  static const int version = 2;
+  static const int version = 1;
 
   Future<Database> get database async{
     if (_database != null){
@@ -45,17 +45,14 @@ class DatabaseProvider extends ChangeNotifier{
     );
   }
 
-  add(City city) async{
+  Future<int> add(City city) async{
     final db = await database;
-    db.insert('city', city.toMap());
-    notifyListeners();
+    return db.insert('city', city.toMap());
   }
 
-  delete(String name) async {
+  Future<int> delete(String name) async {
     final db = await database;
-
-    db.delete('city', where: 'name=?', whereArgs: [name]);
-    notifyListeners();
+    return await db.delete('city', where: 'name=?', whereArgs: [name]);
   }
 
   Future<List<City>> getAllCities() async {

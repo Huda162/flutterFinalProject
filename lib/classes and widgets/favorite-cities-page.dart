@@ -11,17 +11,17 @@ import 'city-prrovider.dart';
 import 'city-database.dart';
 import 'city.dart';
 
-class CitiesWeatherPage extends StatefulWidget {
-  CitiesWeatherPage({Key? key});
+class FavoriteCitiesWeatherPage extends StatefulWidget {
+  FavoriteCitiesWeatherPage({Key? key});
 
 
   @override
-  State<CitiesWeatherPage> createState() => _CitiesWeatherPageState();
+  State<FavoriteCitiesWeatherPage> createState() => _FavoriteCitiesWeatherPageState();
 }
 
-class _CitiesWeatherPageState extends State<CitiesWeatherPage> {
-  List<String> cities = ["Jerusalem", "London", "Paris", "Amman", "Granada", "Nablus", "New York", "Algiers"];
-  Map<String, bool> favoriteCities = {};
+class _FavoriteCitiesWeatherPageState extends State<FavoriteCitiesWeatherPage> {
+  List<String> favoriteCities = [];
+
 
   @override
   void initState() {
@@ -32,28 +32,10 @@ class _CitiesWeatherPageState extends State<CitiesWeatherPage> {
   Future<void> initializeFavoriteCities() async {
     List<City> allCities = await DatabaseProvider.instance.getAllCities();
     setState(() {
-      favoriteCities = Map.fromIterable(
-          allCities, key: (city) => city.name, value: (_) => true);
+      favoriteCities = allCities.map((city) => city.name).toList();
     });
   }
 
-
-  Future<void> changeFavoriteState( Map<String, dynamic> weatherData) async {
-    bool cityExists = await DatabaseProvider.instance.doesCityExist(weatherData["location"]['name']);
-    if (cityExists == false) {
-      City city = City(id: -1, name: weatherData["location"]['name'],country: weatherData['location']['country']);
-      DatabaseProvider.instance.add(city);
-      setState(() {
-        favoriteCities[weatherData["location"]['name']] = true;
-      });
-      print("added to favorite");
-    } else {
-      DatabaseProvider.instance.delete(weatherData["location"]['name']);
-      setState(() {
-        favoriteCities.remove(weatherData["location"]['name']);
-      });
-    }
-  }
   void showCityDialog(
       BuildContext context, String city, Map<String, dynamic> weatherData) {
     showDialog(
@@ -74,13 +56,13 @@ class _CitiesWeatherPageState extends State<CitiesWeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(context, "Cities Weather"),
+      appBar: CustomAppBar(context, "Favorite Cities Weather"),
       drawer: AppDrawer(),
       body: ListView.builder(
-        itemCount: cities.length,
+        itemCount: favoriteCities.length,
         itemBuilder: (context, index) {
           return FutureBuilder<Map<String, dynamic>>(
-            future: fetchWeatherData().getWeatherData(cities[index]),
+            future: fetchWeatherData().getWeatherData(favoriteCities[index]),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -91,7 +73,7 @@ class _CitiesWeatherPageState extends State<CitiesWeatherPage> {
                 return ListTile(
                   onTap: () {
                     Provider.of<CityProvider>(context, listen: false)
-                        .changeSelectedCity(cities[index]);
+                        .changeSelectedCity(favoriteCities[index]);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HomePage()));
                   },
@@ -119,21 +101,12 @@ class _CitiesWeatherPageState extends State<CitiesWeatherPage> {
                         color: Colors.grey,
                       ),
                     ),
-                      IconButton(
-                          onPressed: (){
-                              changeFavoriteState(weatherData);
-                              print("star clicked");
-                          },
-                        icon: Icon(
-                          favoriteCities.containsKey(weatherData["location"]['name'])
-                              ? Icons.star
-                              : Icons.star_border,
-                        ),),],
+                      ],
                   ),
                   trailing:
                       ElevatedButton(
                         onPressed: () {
-                          showCityDialog(context, cities[index], weatherData);
+                          showCityDialog(context, favoriteCities[index], weatherData);
                         },
                         child: Text("Show Details"),
                       ),

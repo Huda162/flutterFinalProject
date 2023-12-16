@@ -5,6 +5,7 @@ import 'package:flutter_final_project/classes%20and%20widgets/fetch_api_data.dar
 import 'CustomAppBar.dart';
 import 'package:provider/provider.dart';
 import 'city-prrovider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key});
@@ -16,7 +17,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     String selectedCity = Provider.of<CityProvider>(context).selectedCity;
     return Scaffold(
-      appBar: CustomAppBar("Weather App"),
+      appBar: CustomAppBar(context, "Weather App"),
       drawer: AppDrawer(),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchWeatherData().getWeatherData(selectedCity),
@@ -32,10 +33,13 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('${weatherData['location']['name']}'),
-                  Image.network(
-                    weatherData['condition']['icon'],
-                    width: 100,
-                    height: 100,
+                  CachedNetworkImage(
+                    imageUrl: Uri.encodeFull('https:' + weatherData['condition']['icon']),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) {
+                      print("Error loading image: $error");
+                      return Icon(Icons.error);
+                    },
                   ),
                   Text('${weatherData['temperature']}°C'),
                   Text('${weatherData['condition']['text']}'),

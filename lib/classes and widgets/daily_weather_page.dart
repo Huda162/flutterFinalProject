@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_final_project/classes%20and%20widgets/fetch_api_data.dart';
 import 'CustomAppBar.dart';
@@ -13,7 +14,7 @@ class DailyWeatherPage extends StatelessWidget {
     String selectedCity = Provider.of<CityProvider>(context).selectedCity;
 
     return Scaffold(
-      appBar: CustomAppBar("Daily Weather in ${selectedCity}"),
+      appBar: CustomAppBar(context, "Daily Weather in ${selectedCity}"),
       drawer: AppDrawer(),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: fetchWeatherData().getDailyWeatherData(selectedCity),
@@ -57,10 +58,13 @@ class DailyWeatherPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  child: Image.network(
-                    forecast['condition']['icon'],
-                    width: 110,
-                    height: 110,
+                  child: CachedNetworkImage(
+                    imageUrl: Uri.encodeFull('https:' +forecast['condition']['icon']),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) {
+                      print("Error loading image: $error");
+                      return Icon(Icons.error);
+                    },
                   ),
                 ),
                 Text('${forecast['date'].toString().substring(0, 10)}'),
