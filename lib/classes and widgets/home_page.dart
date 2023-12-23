@@ -7,9 +7,14 @@ import 'package:provider/provider.dart';
 import 'city-prrovider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     String selectedCity = Provider.of<CityProvider>(context).selectedCity;
@@ -64,6 +69,14 @@ class HomePage extends StatelessWidget {
                           fontSize: 18.0,
                           color: Colors.grey,
                         ),
+
+                      ),
+                      SizedBox(height: 16.0),
+                      ElevatedButton(
+                        onPressed: (){setState(() {
+
+                        });},
+                        child: Text('Reload Data'),
                       ),
                     ],
                   ),

@@ -60,8 +60,6 @@ class fetchWeatherData {
     }
   }
   Future<List<Map<String, dynamic>>> getHourlyWeatherData(location) async {
-    String currentTime = DateTime.now().toString().substring(11,13);
-    print(currentTime);
     final apiUrl = "$baseUrl/forecast.json?key=$apiKey&q=$location&aqi=no&hours=24";
     http.Response response = await http.get(Uri.parse(apiUrl));
 
